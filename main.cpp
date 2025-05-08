@@ -11,8 +11,7 @@ int main(){
 	string input, output; 
 	//DECIMAL value;
 
-	display_console("\t\tFrancesco Maresca's Math Console\n");
-	display_console("\t\t\t\tVersion 1.0\n\n");
+	info();
 
 while (1 == 1)
 {

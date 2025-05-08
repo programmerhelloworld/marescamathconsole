@@ -87,7 +87,10 @@ void cube(){
 }
 
 void info(){
-    display_console("-------------------------------------------\n");
+    display_console("\t-------------------------------------------\n");
+    display_console("\t\tFrancesco Maresca's Math Console\n");
+    display_console("\t\t\t\tVersion 1.0\n\n");
+    display_console("\t-------------------------------------------\n");
 
 }
 // Evaluate expression section of functions (Marescalc originated)
@@ -301,6 +304,11 @@ int input_analysis(string input, string *output){
     else if (input == "help;"){
         help();
     }
+
+    else if (input == "info;"){
+        info();
+    }
+    
     else if (input == "cube;"){
         cube();
     }
