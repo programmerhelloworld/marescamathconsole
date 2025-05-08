@@ -1,3 +1,9 @@
+/*
+ *
+ * Francesco Maresca's Maresca Math Console 
+ * "main.cpp"
+ *
+ */
 #include "marescaconsole.h"
 
 

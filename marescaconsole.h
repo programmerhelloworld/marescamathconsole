@@ -12,6 +12,8 @@
 #include <stack>
 #include <cctype>
 #include <cmath>
+#include <map>
+//#include "AudioPlayer.h"
 using namespace std;
 
 #ifndef MARESCA_H
@@ -20,6 +22,13 @@ using namespace std;
 using INTEGER = int;
 using DECIMAL = double;
 
+/*
+const char *error_audio = "assets/error1.mp3";
+AudioPlayer* ap_err_aux = AudioPlayer::file(error_audio);
+*/
+
+map<string, DECIMAL> variables;
+map<string, INTEGER> variables2;
 
 // Output
 void display_console(string content){
@@ -36,9 +45,21 @@ void clear_output(string *output){
 	*output = "";
 }
 
+void error_sound(){
+  //  ap_err_aux->play();
+}
 // From string to decimal
 void string_to_decimal(string still_string, DECIMAL *value){
 	*value = atof(still_string.c_str());
+}
+
+void help(){
+    display_console("\nCOMMANDS LIST: \n");
+    display_console("eval (expression) - gives the result of an expression\n");
+    display_console("cube - displays a 3d cube ;D\n");
+    display_console("sqrt (number) - gives square root of a number\n");
+    display_console("system.call(terminal/cmd prompt command) - system command (could harm pc if malicous command)\n");
+    display_console("exit | quit - closes the program\n\n");
 }
 
 void decimal_to_string(DECIMAL number, string *output){
@@ -48,6 +69,27 @@ void decimal_to_string(DECIMAL number, string *output){
 }
 
 
+void cube(){
+    display_console("\n\n   -----------------\n");   
+    display_console("  /                / |\n");
+    display_console(" /                /  |\n");
+    display_console("/                /   |\n");
+    display_console("-----------------    |\n");    
+    display_console("|                |   |\n");
+    display_console("|                |   /\n");
+    display_console("|                |  /\n");
+    display_console("|                | /\n");
+    display_console("----------------- /\n");
+
+
+
+
+}
+
+void info(){
+    display_console("-------------------------------------------\n");
+
+}
 // Evaluate expression section of functions (Marescalc originated)
 bool isDigit(char c) {
     return c >= '0' && c <= '9';
@@ -197,6 +239,49 @@ int input_analysis(string input, string *output){
 	    display_console("Error - missing closing ');'\n");
 	}
 
+        // Decimal variable definition (e.g. DECIMAL pi = 3.14;)
+    else if ((input.substr(0, 8) == "DECIMAL ") && input[input.length() - 1] == ';') {
+        string statement = input.substr(8, input.length() - 9); // remove 'decimal ' and final ';'
+        size_t equal_pos = statement.find('=');
+        if (equal_pos != string::npos) {
+            string var_name = statement.substr(0, equal_pos);
+            string var_value = statement.substr(equal_pos + 1);
+/*
+            // Trim whitespaces
+            var_name.erase(remove_if(var_name.begin(), var_name.end(), ::isspace), var_name.end());
+            var_value.erase(remove_if(var_value.begin(), var_value.end(), ::isspace), var_value.end());
+*/
+            DECIMAL val;
+            string_to_decimal(var_value, &val);
+            variables[var_name] = val;
+            *output = "Decimal variable '" + var_name + "' set to " + var_value;
+        } else {
+            *output = "Error - invalid decimal variable declaration.";
+        }
+    }
+
+        // INTEGER variable definition (e.g. INTEGER x = 5;)
+    else if ((input.substr(0, 8) == "INTEGER ") && input[input.length() - 1] == ';') {
+        string statement = input.substr(8, input.length() - 9); // remove 'INTEGER ' and final ';'
+        size_t equal_pos = statement.find('=');
+        if (equal_pos != string::npos) {
+            string var_name = statement.substr(0, equal_pos);
+            string var_value = statement.substr(equal_pos + 1);
+/*
+            // Trim whitespaces
+            var_name.erase(remove_if(var_name.begin(), var_name.end(), ::isspace), var_name.end());
+            var_value.erase(remove_if(var_value.begin(), var_value.end(), ::isspace), var_value.end());
+*/
+            DECIMAL val;
+            string_to_decimal(var_value, &val);
+            variables2[var_name] = val;
+            *output = "Integer variable '" + var_name + "' set to " + var_value;
+        } else {
+            *output = "Error - invalid INTEGER variable declaration.";
+        }
+    }
+
+
 	// Eval
 	else if ((input.substr(0, 5) == "eval(") && (input.substr(input.length()-2, 2) == ");")){
 	    string expr = input.substr(5, input.length()-7); 
@@ -213,9 +298,18 @@ int input_analysis(string input, string *output){
     	*output = "QUIT_PROGRAM=TRUE;";
     }
 
+    else if (input == "help;"){
+        help();
+    }
+    else if (input == "cube;"){
+        cube();
+    }
+
     // Semicolon check
     else if (input.substr(input.length()-1,1) != ";"){
     	*output = "Error - no semicolon!";
+    } else {
+        *output = "Command not recognized";
     }
 
     return 0;
